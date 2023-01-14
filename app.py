@@ -6,8 +6,8 @@ from urllib.request import urlopen as uReq
 
 app = Flask(__name__)
 
-@app.route('/',methods=['GET'])  # route to display the home page
-@cross_origin()
+@app.route('/',methods=['GET'])  # route to display the home page (just skeleton)
+@cross_origin() # required when we are deploying on the cloud system and it needs to be called upon from different locations
 def homePage():
     return render_template("index.html")
 
@@ -22,10 +22,10 @@ def index():
             flipkartPage = uClient.read()
             uClient.close()
             flipkart_html = bs(flipkartPage, "html.parser")
-            bigboxes = flipkart_html.findAll("div", {"class": "_1AtVbE col-12-12"})
+            bigboxes = flipkart_html.findAll("div", {"class": "_1AtVbE col-12-12"}) # Finds the class of all the mobiles listed on the first page for Samsung
             del bigboxes[0:3]
-            box = bigboxes[0]
-            productLink = "https://www.flipkart.com" + box.div.div.div.a['href']
+            box = bigboxes[0] # Selects the 4th phone
+            productLink = "https://www.flipkart.com" + box.div.div.div.a['href'] # finds the link which can direct us to details about the 4th phone
             prodRes = requests.get(productLink)
             prodRes.encoding='utf-8'
             prod_html = bs(prodRes.text, "html.parser")
